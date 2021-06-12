@@ -1,0 +1,123 @@
+body {
+  background-color: lightgray;
+}
+
+* {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#main-content {
+  display: flex;
+  flex-direction: row;
+  height: 800px;
+}
+
+#main-content > div {
+  margin: 10px;
+}
+
+input {
+  margin: 5px;
+}
+
+canvas {
+  border: 1px solid #000000;
+}
+
+.container {
+  position: relative;
+  overflow: hidden;
+  width: 800px;
+  height: 600px;
+}
+
+#divcontainer {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.floating-div {
+  position: absolute;
+  cursor: default;
+  pointer-events: none;
+}
+
+#unit-cell-atom-list {
+  border: 1px solid #000000;
+  cursor: pointer;
+  width: 200px;
+}
+
+.atom-list-item {
+  font-family: Arial, Helvetica, sans-serif;
+  word-spacing: 10px;
+  margin: 0px 5px;
+  height: 30px;
+  justify-content: center;
+}
+
+#atom-position-feedback,
+#lattice-parameters-feedback {
+  display: block;
+  height: 2.5rem;
+  overflow: hidden;
+}
+
+/* #atom-position-feedback > p,
+#lattice-parameter-feedback > p {
+  margin: 0;
+} */
+
+.selected-item {
+  color: white;
+  background-color: black;
+}
+.basis-input-area > input {
+  width: 50px;
+}
+
+.input-area {
+  float: none; /* if you had floats before? otherwise inline-block will behave differently */
+  display: inline-block;
+  width: 100px;
+}
+
+.input-area > input {
+  width: 50px;
+}
+
+.input-area > label {
+  width: 50px;
+}
+
+.hidden-input-section {
+  display: none;
+}
+
+table {
+  border-collapse: collapse;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+td {
+  font-family: Arial, Helvetica, sans-serif;
+  border: 1px solid black;
+  justify-content: center;
+  text-align: center;
+}
+
+.selected-element {
+  color: white;
+  background-color: black;
+}
+
+#direction-section {
+  position: absolute;
+}

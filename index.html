@@ -1,0 +1,511 @@
+<html lang="en" dir="ltr">
+
+<html>
+	<head>
+		<meta charset="utf-8">
+		<script src="app.js" charset="utf-8" type="module"></script>
+		<link rel="stylesheet" href="styles.css">
+
+		<title>Crystal Constructor</title>
+	</head>
+	<body>
+		<h1>Crystal Constructor</h1>
+		<div id="main-content">
+			<div id="canvas-section">
+				<div class = "container">
+					<canvas id="c"></canvas>
+					<div id="origin_divcontainer"></div>
+					<div id="ahat_divcontainer"></div>
+					<div id="bhat_divcontainer"></div>
+					<div id="chat_divcontainer"></div>
+				</div>
+				<p>Click and drag to rotate. Use mouse scroll wheel to zoom in and out.<br>Alternatively, you may use these buttons below to change the model view.</p>
+				<input type="button" id="zoom-in-button" value="Zoom In">
+				<input type="button" id="zoom-out-button" value="Zoom Out">
+				<input type="button" id="rotate-right-button" value="Rotate Right">
+				<input type="button" id="rotate-left-button" value="Rotate Left">
+				<input type="button" id="rotate-up-button" value="Rotate Up">
+				<input type="button" id="rotate-down-button" value="Rotate Down">
+			</div>
+			<div id="model-info">
+				<p>Unit Cell Atoms</p>
+				<div id='unit-cell-atom-list'></div>
+				<input type="button" id="remove-atom-button" value="Remove Atom">
+			</div>
+			<div id="input-secton">
+				<input type="button" id="reset-button" value="Reset Model">
+				<div id='build-mode-selector'>
+					<input type="radio" id="basis-radio" name="build-mode" value="basis" checked>
+					<label for="basis">Lattice Basis Vectors</label><br>
+					<input type="radio" id="parameters-radio" name="build-mode" value="parameters">
+					<label for="parameters">Lattice Parameters</label><br>
+				</div>
+				<div id="lattice-basis-input">
+					<p>Enter coordinate components of lattice basis vectors<br>Lattice basis vectors:</p>
+					<div class="parameters-input"t>
+						<div class="basis-input-area">
+							<label for="a_hat">&#226 [</label>
+							<input type="text" id="a_hat_x" value="1.000">
+							<label>, 0, 0 ]</label><br>
+						</div>
+						<div class="basis-input-area">
+							<label for="b_hat">&#98&#770 [</label>
+							<input type="text" id="b_hat_x" value="0.000">
+							<label>, </label>
+							<input type="text" id="b_hat_y" value="1.000">
+							<label>, 0 ]</label><br>
+						</div>
+						<div class="basis-input-area">
+							<label for="c_hat">&#99&#770 [</label>
+							<input type="text" id="c_hat_x" value="0.000">
+							<label>, </label>
+							<input type="text" id="c_hat_y" value="0.000">
+							<label>, </label>
+							<input type="text" id="c_hat_z" value="1.000">
+							<label>]</label><br>
+						</div>
+					</div>
+				</div>
+				<div id="lattice-parameter-input" class="hidden-input-section">
+					<p>Enter lengths in angstroms, angles in degrees <br> Lattice parameters:</p>
+					<div class="parameters-input" id=lattice-parameters-input>
+						<div class="input-area">
+							<label for="a_paramter">a</label>
+							<input type="text" id="a_parameter" value = "1.000">
+							<label>&#8491</label><br>
+						</div>
+						<div class="input-area">
+							<label for="b_paramter">b</label>
+							<input type="text" id="b_parameter" value = "1.000">
+							<label>&#8491</label><br>
+						</div>
+						<div class="input-area">
+							<label for="c_paramter">c</label>
+							<input type="text" id="c_parameter" value = "1.000">
+							<label>&#8491</label><br>
+						</div>
+					</div>
+					<div class="parameters-input">
+						<div class="input-area">
+							<label for="alpha_paramter">&#945</label>
+							<input type="text" id="alpha_parameter" value="90.000">
+							<label>&#176</label><br>
+						</div>
+						<div class="input-area">
+							<label for="beta_paramter">&#946</label>
+							<input type="text" id="beta_parameter" value = "90.000">
+							<label>&#176</label><br>
+						</div>
+						<div class="input-area">
+							<label for="gamma_paramter">&#947</label>
+							<input type="text" id="gamma_parameter" value="90.000">
+							<label>&#176</label><br>
+						</div>
+					</div>
+				</div>
+				<p>Enter lattice basis vector's multipliers to generate a supercell model:</p>
+				<div class="parameters-input">
+					<div class="input-area">
+						<input type="text" id="a_hat_multiplier" value="1">
+						<label for="a_hat_multiplier">x &#226</label><br>
+					</div>
+					<div class="input-area">
+						<input type="text" id="b_hat_multiplier" value="1">
+						<label for="b_hat_multiplier">x &#98&#770</label><br>
+					</div>
+					<div class="input-area">
+						<input type="text" id="c_hat_multiplier" value="1">
+						<label for="c_hat_multiplier">x &#99&#770</label><br>
+					</div>
+				</div>
+				<input type="button" id="build-button" value="Build Cell">
+				<div id='lattice-parameters-feedback'></div>
+				<p>Enter atom positions in lattice basis coordinates</p>
+				<div class="parameters-input">
+					<div class="periodic-table">
+						<table>
+						<tr>
+						<td class='element-symbol'>H</td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td class='element-symbol'>He</td>
+						</tr>
+						<tr>
+						<td class='element-symbol'>Li</td>
+						<td class='element-symbol'>Be</td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td class='element-symbol'>B</td>
+						<td class='element-symbol'>C</td>
+						<td class='element-symbol'>N</td>
+						<td class='element-symbol'>O</td>
+						<td class='element-symbol'>F</td>
+						<td class='element-symbol'>Ne</td>
+						</tr>
+						<tr>
+						<td class='element-symbol'>Na</td>
+						<td class='element-symbol'>Mg</td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td class='element-symbol'>Al</td>
+						<td class='element-symbol'>Si</td>
+						<td class='element-symbol'>P</td>
+						<td class='element-symbol'>S</td>
+						<td class='element-symbol'>Cl</td>
+						<td class='element-symbol'>Ar</td>
+						</tr>
+						<tr>
+						<td class='element-symbol'>K</td>
+						<td class='element-symbol'>Ca</td>
+						<td class='element-symbol'>Sc</td>
+						<td class='element-symbol'>Ti</td>
+						<td class='element-symbol'>V</td>
+						<td class='element-symbol'>Cr</td>
+						<td class='element-symbol'>Mn</td>
+						<td class='element-symbol'>Fe</td>
+						<td class='element-symbol'>Co</td>
+						<td class='element-symbol'>Ni</td>
+						<td class='element-symbol'>Cu</td>
+						<td class='element-symbol'>Zn</td>
+						<td class='element-symbol'>Ga</td>
+						<td class='element-symbol'>Ge</td>
+						<td class='element-symbol'>As</td>
+						<td class='element-symbol'>Se</td>
+						<td class='element-symbol'>Br</td>
+						<td class='element-symbol'>Kr</td>
+						</tr>
+						<tr>
+						<td class='element-symbol'>Rb</td>
+						<td class='element-symbol'>Sr</td>
+						<td class='element-symbol'>Y</td>
+						<td class='element-symbol'>Zr</td>
+						<td class='element-symbol'>Nb</td>
+						<td class='element-symbol'>Mo</td>
+						<td class='element-symbol'>Tc</td>
+						<td class='element-symbol'>Ru</td>
+						<td class='element-symbol'>Rh</td>
+						<td class='element-symbol'>Pd</td>
+						<td class='element-symbol'>Ag</td>
+						<td class='element-symbol'>Cd</td>
+						<td class='element-symbol'>In</td>
+						<td class='element-symbol'>Sn</td>
+						<td class='element-symbol'>Sb</td>
+						<td class='element-symbol'>Te</td>
+						<td class='element-symbol'>I</td>
+						<td class='element-symbol'>Xe</td>
+						</tr>
+						<tr>
+						<td class='element-symbol'>Cs</td>
+						<td class='element-symbol'>Ba</td>
+						<td></td>
+						<td class='element-symbol'>Hf</td>
+						<td class='element-symbol'>Ta</td>
+						<td class='element-symbol'>W</td>
+						<td class='element-symbol'>Re</td>
+						<td class='element-symbol'>Os</td>
+						<td class='element-symbol'>Ir</td>
+						<td class='element-symbol'>Pt</td>
+						<td class='element-symbol'>Au</td>
+						<td class='element-symbol'>Hg</td>
+						<td class='element-symbol'>Tl</td>
+						<td class='element-symbol'>Pb</td>
+						<td class='element-symbol'>Bi</td>
+						<td class='element-symbol'>Po</td>
+						<td class='element-symbol'>At</td>
+						<td class='element-symbol'>Rn</td>
+						</tr>
+						<tr>
+						<td class='element-symbol'>Fr</td>
+						<td class='element-symbol'>Ra</td>
+						<td></td>
+						<td class='element-symbol'>Rf</td>
+						<td class='element-symbol'>Db</td>
+						<td class='element-symbol'>Sg</td>
+						<td class='element-symbol'>Bh</td>
+						<td class='element-symbol'>Hs</td>
+						<td class='element-symbol'>Mt</td>
+						<td class='element-symbol'>Ds</td>
+						<td class='element-symbol'>Rg</td>
+						<td class='element-symbol'>Cn</td>
+						<td class='element-symbol'>Nh</td>
+						<td class='element-symbol'>Fl</td>
+						<td class='element-symbol'>Mc</td>
+						<td class='element-symbol'>Lv</td>
+						<td class='element-symbol'>Ts</td>
+						<td class='element-symbol'>Og</td>
+						</tr>
+						<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						</tr>
+						<tr>
+						<td></td>
+						<td></td>
+						<td class='element-symbol'>La</td>
+						<td class='element-symbol'>Ce</td>
+						<td class='element-symbol'>Pr</td>
+						<td class='element-symbol'>Nd</td>
+						<td class='element-symbol'>Pm</td>
+						<td class='element-symbol'>Sm</td>
+						<td class='element-symbol'>Eu</td>
+						<td class='element-symbol'>Gd</td>
+						<td class='element-symbol'>Tb</td>
+						<td class='element-symbol'>Dy</td>
+						<td class='element-symbol'>Ho</td>
+						<td class='element-symbol'>Er</td>
+						<td class='element-symbol'>Tm</td>
+						<td class='element-symbol'>Yb</td>
+						<td class='element-symbol'>Lu</td>
+						<td></td>
+						</tr>
+						<tr>
+						<td></td>
+						<td></td>
+						<td class='element-symbol'>Ac</td>
+						<td class='element-symbol'>Th</td>
+						<td class='element-symbol'>Pa</td>
+						<td class='element-symbol'>U</td>
+						<td class='element-symbol'>Np</td>
+						<td class='element-symbol'>Pu</td>
+						<td class='element-symbol'>Am</td>
+						<td class='element-symbol'>Cm</td>
+						<td class='element-symbol'>Bk</td>
+						<td class='element-symbol'>Cf</td>
+						<td class='element-symbol'>Es</td>
+						<td class='element-symbol'>Fm</td>
+						<td class='element-symbol'>Md</td>
+						<td class='element-symbol'>No</td>
+						<td class='element-symbol'>Lr</td>
+						<td></td>
+						</tr>
+						</table>
+					</div>
+					<div class="input-area">
+						<label for="x_atom_pos">x</label>
+						<input type="text" id="x_atom_pos" value="0.000">
+					</div>
+					<div class="input-area">
+						<label for="y_atom_pos">y</label>
+						<input type="text" id="y_atom_pos" value="0.000">
+					</div>
+					<div class="input-area">
+						<label for="z_atom_pos">z</label>
+						<input type="text" id="z_atom_pos" value="0.000">
+					</div>
+				</div>
+				<input type="button" id="add-atom-button" value="Add Atom">
+				<div id='atom-position-feedback'></div>
+				<br><input type="button" id="poscar-button" value="Download POSCAR File">
+			</div>
+		</div>
+
+		<div id="direction-section">
+			<h2>Guide</h2>
+			<p>
+			Crystals can be thought of as a lattice populated by atoms, composing a periodic structure in all spatial directions.
+			<br><br> 
+			This lattice is composed of repeating units called unit cells, each of which containing the atomic motif that makes up a crystal's periodic structure.
+			<br><br>
+			Each unit cell is defined by a set of basis vectors, &#226, &#98&#770, and &#99&#770.
+			<br><br>
+			These basis vectors can be defined explicitly or be derived from a set of parameters, called Lattice Parameters, denoting their lengths and the angles between them.
+			<br><br>
+			These basis vectors also form a coordinate system for defining the location of each atom within the unit cell.
+			<br><br>
+			Once the unit cell geometry and atom positions are defined, we can construct a supercell model of the crystal by repeatedly copying the unit cell along its basis vectors.
+			<br><br>
+			This guide will detail the process of utilizing Crystal Constructor to construct such a crystal model.  
+			</p>
+			<h2>How to Use Crystal Constructor</h2>
+			<h3>Defining the Unit Cell</h3>
+			<p>
+			Use the radio buttons to select which input method you prefer when defining the crystal lattice unit cell, Lattice Basis Vectors or Lattice Parameters.
+			</p>
+			<h4>Lattice Basis Vectors</h4>
+			<p>
+			When using Lattice Basis Vectors, enter the coordinate components of the lattice basis vectors, &#226, &#98&#770, and
+			&#99&#770.
+			<br><br>
+			&#226 must lay along the positive direction of the x-axis.
+			<br><br>
+			&#98&#770 must lay in the xy-plane with a positive y-component.
+			<br><br>
+			&#99&#770 must have a positive z-component.
+			<br><br>
+			These limitations are required to ensure the lattice basis vectors form a right-handed coordinate system.
+			</p>
+			<h4>Lattice Parameters</h4>
+			<p>
+			When using Lattice Parameters, enter the lengths of &#226, &#98&#770, and &#99&#770, as well as the angles between
+			them, &#945, &#946, and &#947.
+			<br><br>
+			a, b, and c denote the lengths of &#226, &#98&#770, and &#99&#770, respectively.
+			<br><br>
+			&#945 denotes the angle between &#98&#770 and &#99&#770, &#946 denotes the angle between &#99&#770 and &#226, and
+			&#947 denotes the angle between &#226 and &#98&#770.
+			<br><br>
+			<b>Be careful!</b> Not all combinations of &#945, &#946, and &#947 are valid.
+			<br><br>
+			&#946 and &#947 must each be greater than 0&#176 and less than 180&#176.
+			<br><br>
+			The valid range for &#945 will depend on &#946 and &#947.<br>If you are unsure what the range for &#945 should be,
+			simply enter values for &#946 and &#947 and click "Build Cell". The feedback message will give you a valid range for
+			&#945.
+			<br><br>
+			With the unit cell defined, you can enter multipliers for &#226, &#98&#770, and &#99&#770 to generate a supercell
+			model.
+			<br><br>
+			Click "Build Cell" to generate your cell.
+			</p>
+			<h3>Adding Atoms</h3>
+			<p>
+			To start adding atoms, select an atom from the periodic table and enter it's direct, fractional coordinates
+			respective to the coordinate system defined by the lattice basis vectors.
+			<br><br>
+			These coordinates denote the location of each atom within the unit cell. The coordinate components should each be greater than or equal to 0.0 and less than 1.0 or, in other words, in the range [0.0, 1.0).
+			<br><br>
+			Click "Add Atom" to add that atom to the unit cell atom list. The displayed model will be automatically
+			populated.
+			<br><br>
+			The model will display all atoms in the super cell while the Unit Cell Atoms list (to the right of the viewport) will show only atoms listed in the unit
+			cell.
+			<br><br>
+			To remove an atom, select that atom from the list and click "Remove Atom".
+			</p>
+			<h3>Future Features</h3>
+			<p>As of now, Crystal Constructor can only be used to make models of perfect crystals.
+			<br><br>
+			Tools to add crystal defects are still being developed.
+			</p>
+		</div>
+
+		<script id="line-mesh-vertex-shader" type="notjs">
+
+		// an attribute will receive data from a buffer
+		attribute vec4 a_position;
+		attribute vec4 a_color;
+
+		uniform mat4 u_matrix;
+
+		varying vec4 v_color;
+
+		void main() {
+		// Multiply the position by the matrix.
+		gl_Position = u_matrix * a_position;
+
+		// Pass the color to the fragment shader.
+		v_color = a_color;
+		}
+
+		</script>
+
+		<script id="line-mesh-fragment-shader" type="notjs">
+
+		// fragment shaders don't have a default precision so we need
+		// to pick one. mediump is a good default
+		precision mediump float;
+
+		// Passed in from the vertex shader.
+		varying vec4 v_color;
+
+		void main() {
+		// gl_FragColor is a special variable a fragment shader
+		// is responsible for setting
+		gl_FragColor = v_color;
+		}
+
+		</script>
+
+		<script id="triangle-mesh-vertex-shader" type="notjs">
+
+		// an attribute will receive data from a buffer
+		attribute vec4 a_position;
+
+		uniform mat4 u_matrix;
+		uniform mat4 u_lighting_rotation;
+
+		varying vec4 v_color_multiplier;
+
+		void main() {
+		// Multiply the position by the matrix.
+		gl_Position = u_matrix * a_position;
+
+		//use position to get color multiplier
+		vec4 rotated_vertex = u_lighting_rotation * a_position;
+		vec3 pos_vector = vec3(rotated_vertex.xyz);
+		vec3 light_vector = vec3(-1.0,-1.0,1.0);
+
+		float dot_product = dot(normalize(light_vector),normalize(pos_vector));
+		float multiplier = (dot_product + 1.0) / 2.0;
+		v_color_multiplier = vec4(vec3(multiplier), 1.0);
+
+		}
+
+		</script>
+
+		<script id="triangle-mesh-fragment-shader" type="notjs">
+
+		// fragment shaders don't have a default precision so we need
+		// to pick one. mediump is a good default
+		precision mediump float;
+
+		uniform vec4 u_color;
+
+		varying vec4 v_color_multiplier;
+
+		void main() {
+		// gl_FragColor is a special variable a fragment shader
+		// is responsible for setting
+		gl_FragColor = u_color * v_color_multiplier;
+		}
+
+		</script>
+
+	</body>
+</html>
