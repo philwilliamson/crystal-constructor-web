@@ -490,7 +490,7 @@ build_button_input.onclick = function(){
 		} else if (gamma_latt_param <= 0.0 || gamma_latt_param >= 180.0 || beta_latt_param <= 0.0 || beta_latt_param >= 180.0){
 			lattice_parameter_feedback.querySelectorAll('*').forEach(n => n.remove());
 			var new_para = document.createElement("p");
-			new_para.innerHTML = '&#946 and &#947 must be greater than 0&#176 and less than 180&#176.<br>Set these values and click "Build Cell" to see the accepted range for &#945.';
+			new_para.innerHTML = '&#946 and &#947 must be greater than 0&#176 and less than 180&#176.';
 			new_para.style.color = 'red';
 			lattice_parameter_feedback.appendChild(new_para);
 		} else if (alpha_latt_param <= min_alpha || alpha_latt_param >= max_alpha) {
@@ -520,7 +520,7 @@ build_button_input.onclick = function(){
 			lattice_parameter_feedback.querySelectorAll('*').forEach(n => n.remove());
 
 			var new_para = document.createElement("p");
-			new_para.innerHTML = 'Lattice parameters accepted.<br><br>&#946 and &#947 are in accepted range between 0&#176 and 180&#176.<br>&#945 is in accepted range between ' + String(min_alpha.toFixed(3)) + '&#176 and ' + String(max_alpha.toFixed(3)) + '&#176.';
+			new_para.innerHTML = 'Lattice parameters accepted.';
 			new_para.style.color = 'green';
 			lattice_parameter_feedback.appendChild(new_para);
 
@@ -591,7 +591,7 @@ var cell_transform_matrix = transformMatrix(cell_transform_parameters);
 var atom_lighting_matrix = lightingMatrix(cell_transform_parameters);
 
 //Set up canvas
-var canvas = document.getElementById("c");
+var canvas = document.getElementById("main-canvas");
 canvas.width = 800;
 canvas.height = 600;
 

@@ -11,10 +11,10 @@ import "../styles/styles.css";
 	</head>
 	<body>
 		<h1>Crystal Constructor</h1>
-		<div id="main-content">
+		<div id="editor-section">
 			<div id="canvas-section">
-				<div class = "container">
-					<canvas id="c"></canvas>
+				<div id="canvas-container">
+					<canvas id="main-canvas"></canvas>
 					<div id="origin_divcontainer"></div>
 					<div id="ahat_divcontainer"></div>
 					<div id="bhat_divcontainer"></div>
@@ -28,7 +28,7 @@ import "../styles/styles.css";
 				<input type="button" id="rotate-up-button" value="Rotate Up">
 				<input type="button" id="rotate-down-button" value="Rotate Down">
 			</div>
-			<div id="model-info">
+			<div>
 				<p>Unit Cell Atoms</p>
 				<div id='unit-cell-atom-list'></div>
 				<input type="button" id="remove-atom-button" value="Remove Atom">
@@ -346,8 +346,8 @@ import "../styles/styles.css";
 			</div>
 		</div>
 
-		<div id="direction-section">
-			<h2>Guide</h2>
+		<div id="about-section">
+			<h2>About</h2>
 			<p>
 			Crystals can be thought of as a lattice populated by atoms, composing a periodic structure in all spatial directions.
 			<br><br> 

@@ -1,45 +1,33 @@
-body {
-  background-color: lightgray;
-}
-
 * {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-#main-content {
-  display: flex;
-  flex-direction: row;
-  height: 800px;
+body {
+  background-color: lightgray;
 }
 
-#main-content > div {
-  margin: 10px;
+p {
+  margin: 0;
+  padding: 0.5rem 0 0.5rem 0;
+}
+
+#editor-section {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding-bottom: 4rem;
 }
 
 input {
   margin: 5px;
 }
 
-canvas {
-  border: 1px solid #000000;
-}
-
-.container {
+#canvas-container {
   position: relative;
   overflow: hidden;
   width: 800px;
   height: 600px;
-}
-
-#divcontainer {
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  width: 100%;
-  height: 100%;
-  z-index: 10;
-  overflow: hidden;
-  pointer-events: none;
 }
 
 .floating-div {
@@ -66,19 +54,19 @@ canvas {
 #lattice-parameters-feedback {
   display: block;
   height: 2.5rem;
-  overflow: hidden;
 }
 
 .selected-item {
   color: white;
   background-color: black;
 }
+
 .basis-input-area > input {
   width: 50px;
 }
 
 .input-area {
-  float: none; /* if you had floats before? otherwise inline-block will behave differently */
+  float: none; 
   display: inline-block;
   width: 100px;
 }
@@ -111,8 +99,4 @@ td {
 .selected-element {
   color: white;
   background-color: black;
-}
-
-#direction-section {
-  position: absolute;
 }
