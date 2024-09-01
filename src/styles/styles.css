@@ -69,11 +69,6 @@ canvas {
   overflow: hidden;
 }
 
-/* #atom-position-feedback > p,
-#lattice-parameter-feedback > p {
-  margin: 0;
-} */
-
 .selected-item {
   color: white;
   background-color: black;

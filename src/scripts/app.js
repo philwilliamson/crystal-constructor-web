@@ -33,6 +33,79 @@ var crystal_model = {
 	atoms: []}
 };
 
+const lineMeshVertexShaderSource = `
+        // an attribute will receive data from a buffer
+		attribute vec4 a_position;
+		attribute vec4 a_color;
+
+		uniform mat4 u_matrix;
+
+		varying vec4 v_color;
+
+		void main() {
+		// Multiply the position by the matrix.
+		gl_Position = u_matrix * a_position;
+
+		// Pass the color to the fragment shader.
+		v_color = a_color;
+		}
+`;
+
+const lineMeshFragmentShaderSource = `
+        // fragment shaders don't have a default precision so we need
+		// to pick one. mediump is a good default
+		precision mediump float;
+
+		// Passed in from the vertex shader.
+		varying vec4 v_color;
+
+		void main() {
+		// gl_FragColor is a special variable a fragment shader
+		// is responsible for setting
+		gl_FragColor = v_color;
+		}
+`;
+
+const triangleMeshVertexShaderSource = `
+    // an attribute will receive data from a buffer
+    attribute vec4 a_position;
+
+    uniform mat4 u_matrix;
+    uniform mat4 u_lighting_rotation;
+
+    varying vec4 v_color_multiplier;
+
+    void main() {
+    // Multiply the position by the matrix.
+    gl_Position = u_matrix * a_position;
+
+    //use position to get color multiplier
+    vec4 rotated_vertex = u_lighting_rotation * a_position;
+    vec3 pos_vector = vec3(rotated_vertex.xyz);
+    vec3 light_vector = vec3(-1.0,-1.0,1.0);
+
+    float dot_product = dot(normalize(light_vector),normalize(pos_vector));
+    float multiplier = (dot_product + 1.0) / 2.0;
+    v_color_multiplier = vec4(vec3(multiplier), 1.0);
+    }
+`;
+
+const triangleMeshFragmentShaderSource = `
+        // fragment shaders don't have a default precision so we need
+		// to pick one. mediump is a good default
+		precision mediump float;
+
+		uniform vec4 u_color;
+
+		varying vec4 v_color_multiplier;
+
+		void main() {
+		// gl_FragColor is a special variable a fragment shader
+		// is responsible for setting
+		gl_FragColor = u_color * v_color_multiplier;
+		}
+`;
+
 //setup crystal model inputs
 //element selection
 var CURRENT_SELECTED_ELEMENT = null;
@@ -661,13 +734,6 @@ gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
 //create shaders, programs, attribute and uniform locations
 //one shader program for super cell (line mesh) and one for spheres (triangle mesh)
-
-// Get the strings for our GLSL shaders
-var lineMeshVertexShaderSource = document.querySelector("#line-mesh-vertex-shader").text;
-var lineMeshFragmentShaderSource = document.querySelector("#line-mesh-fragment-shader").text;
-
-var triangleMeshVertexShaderSource = document.querySelector("#triangle-mesh-vertex-shader").text;
-var triangleMeshFragmentShaderSource = document.querySelector("#triangle-mesh-fragment-shader").text;
 
 // create GLSL shaders, upload the GLSL source, compile the shaders
 var lineMeshVertexShader = createShader(gl, gl.VERTEX_SHADER, lineMeshVertexShaderSource);

@@ -1,11 +1,12 @@
+---
+import "../styles/styles.css";
+---
+
 <html lang="en" dir="ltr">
 
 <html>
 	<head>
 		<meta charset="utf-8">
-		<script src="app.js" charset="utf-8" type="module"></script>
-		<link rel="stylesheet" href="styles.css">
-
 		<title>Crystal Constructor</title>
 	</head>
 	<body>
@@ -42,21 +43,21 @@
 				</div>
 				<div id="lattice-basis-input">
 					<p>Enter coordinate components of lattice basis vectors<br>Lattice basis vectors:</p>
-					<div class="parameters-input"t>
+					<div class="parameters-input">
 						<div class="basis-input-area">
-							<label for="a_hat">&#226 [</label>
+							<label for="a_hat">&#226; [</label>
 							<input type="text" id="a_hat_x" value="1.000">
 							<label>, 0, 0 ]</label><br>
 						</div>
 						<div class="basis-input-area">
-							<label for="b_hat">&#98&#770 [</label>
+							<label for="b_hat">&#98;&#770; [</label>
 							<input type="text" id="b_hat_x" value="0.000">
 							<label>, </label>
 							<input type="text" id="b_hat_y" value="1.000">
 							<label>, 0 ]</label><br>
 						</div>
 						<div class="basis-input-area">
-							<label for="c_hat">&#99&#770 [</label>
+							<label for="c_hat">&#99;&#770; [</label>
 							<input type="text" id="c_hat_x" value="0.000">
 							<label>, </label>
 							<input type="text" id="c_hat_y" value="0.000">
@@ -72,34 +73,34 @@
 						<div class="input-area">
 							<label for="a_paramter">a</label>
 							<input type="text" id="a_parameter" value = "1.000">
-							<label>&#8491</label><br>
+							<label>&#8491;</label><br>
 						</div>
 						<div class="input-area">
 							<label for="b_paramter">b</label>
 							<input type="text" id="b_parameter" value = "1.000">
-							<label>&#8491</label><br>
+							<label>&#8491;</label><br>
 						</div>
 						<div class="input-area">
 							<label for="c_paramter">c</label>
 							<input type="text" id="c_parameter" value = "1.000">
-							<label>&#8491</label><br>
+							<label>&#8491;</label><br>
 						</div>
 					</div>
 					<div class="parameters-input">
 						<div class="input-area">
-							<label for="alpha_paramter">&#945</label>
+							<label for="alpha_paramter">&#945;</label>
 							<input type="text" id="alpha_parameter" value="90.000">
-							<label>&#176</label><br>
+							<label>&#176;</label><br>
 						</div>
 						<div class="input-area">
-							<label for="beta_paramter">&#946</label>
+							<label for="beta_paramter">&#946;</label>
 							<input type="text" id="beta_parameter" value = "90.000">
-							<label>&#176</label><br>
+							<label>&#176;</label><br>
 						</div>
 						<div class="input-area">
-							<label for="gamma_paramter">&#947</label>
+							<label for="gamma_paramter">&#947;</label>
 							<input type="text" id="gamma_parameter" value="90.000">
-							<label>&#176</label><br>
+							<label>&#176;</label><br>
 						</div>
 					</div>
 				</div>
@@ -107,15 +108,15 @@
 				<div class="parameters-input">
 					<div class="input-area">
 						<input type="text" id="a_hat_multiplier" value="1">
-						<label for="a_hat_multiplier">x &#226</label><br>
+						<label for="a_hat_multiplier">x &#226;</label><br>
 					</div>
 					<div class="input-area">
 						<input type="text" id="b_hat_multiplier" value="1">
-						<label for="b_hat_multiplier">x &#98&#770</label><br>
+						<label for="b_hat_multiplier">x &#98;&#770;</label><br>
 					</div>
 					<div class="input-area">
 						<input type="text" id="c_hat_multiplier" value="1">
-						<label for="c_hat_multiplier">x &#99&#770</label><br>
+						<label for="c_hat_multiplier">x &#99;&#770;</label><br>
 					</div>
 				</div>
 				<input type="button" id="build-button" value="Build Cell">
@@ -352,7 +353,7 @@
 			<br><br> 
 			This lattice is composed of repeating units called unit cells, each of which containing the atomic motif that makes up a crystal's periodic structure.
 			<br><br>
-			Each unit cell is defined by a set of basis vectors, &#226, &#98&#770, and &#99&#770.
+			Each unit cell is defined by a set of basis vectors, &#226;, &#98;&#770;, and &#99;&#770;.
 			<br><br>
 			These basis vectors can be defined explicitly or be derived from a set of parameters, called Lattice Parameters, denoting their lengths and the angles between them.
 			<br><br>
@@ -369,36 +370,36 @@
 			</p>
 			<h4>Lattice Basis Vectors</h4>
 			<p>
-			When using Lattice Basis Vectors, enter the coordinate components of the lattice basis vectors, &#226, &#98&#770, and
-			&#99&#770.
+			When using Lattice Basis Vectors, enter the coordinate components of the lattice basis vectors, &#226;, &#98;&#770;, and
+			&#99;&#770;.
 			<br><br>
-			&#226 must lay along the positive direction of the x-axis.
+			&#226; must lay along the positive direction of the x-axis.
 			<br><br>
-			&#98&#770 must lay in the xy-plane with a positive y-component.
+			&#98;&#770; must lay in the xy-plane with a positive y-component.
 			<br><br>
-			&#99&#770 must have a positive z-component.
+			&#99;&#770; must have a positive z-component.
 			<br><br>
 			These limitations are required to ensure the lattice basis vectors form a right-handed coordinate system.
 			</p>
 			<h4>Lattice Parameters</h4>
 			<p>
-			When using Lattice Parameters, enter the lengths of &#226, &#98&#770, and &#99&#770, as well as the angles between
-			them, &#945, &#946, and &#947.
+			When using Lattice Parameters, enter the lengths of &#226;, &#98;&#770;, and &#99;&#770;, as well as the angles between
+			them, &#945;, &#946;, and &#947;.
 			<br><br>
-			a, b, and c denote the lengths of &#226, &#98&#770, and &#99&#770, respectively.
+			a, b, and c denote the lengths of &#226;, &#98;&#770;, and &#99;&#770;, respectively.
 			<br><br>
-			&#945 denotes the angle between &#98&#770 and &#99&#770, &#946 denotes the angle between &#99&#770 and &#226, and
-			&#947 denotes the angle between &#226 and &#98&#770.
+			&#945; denotes the angle between &#98;&#770; and &#99;&#770;, &#946; denotes the angle between &#99;&#770; and &#226;, and
+			&#947; denotes the angle between &#226; and &#98;&#770;.
 			<br><br>
-			<b>Be careful!</b> Not all combinations of &#945, &#946, and &#947 are valid.
+			<b>Be careful!</b> Not all combinations of &#945;, &#946;, and &#947; are valid.
 			<br><br>
-			&#946 and &#947 must each be greater than 0&#176 and less than 180&#176.
+			&#946; and &#947; must each be greater than 0&#176; and less than 180&#176;.
 			<br><br>
-			The valid range for &#945 will depend on &#946 and &#947.<br>If you are unsure what the range for &#945 should be,
-			simply enter values for &#946 and &#947 and click "Build Cell". The feedback message will give you a valid range for
-			&#945.
+			The valid range for &#945; will depend on &#946; and &#947;.<br>If you are unsure what the range for &#945; should be,
+			simply enter values for &#946; and &#947; and click "Build Cell". The feedback message will give you a valid range for
+			&#945;.
 			<br><br>
-			With the unit cell defined, you can enter multipliers for &#226, &#98&#770, and &#99&#770 to generate a supercell
+			With the unit cell defined, you can enter multipliers for &#226;, &#98;&#770;, and &#99;&#770; to generate a supercell
 			model.
 			<br><br>
 			Click "Build Cell" to generate your cell.
@@ -425,87 +426,7 @@
 			</p>
 		</div>
 
-		<script id="line-mesh-vertex-shader" type="notjs">
-
-		// an attribute will receive data from a buffer
-		attribute vec4 a_position;
-		attribute vec4 a_color;
-
-		uniform mat4 u_matrix;
-
-		varying vec4 v_color;
-
-		void main() {
-		// Multiply the position by the matrix.
-		gl_Position = u_matrix * a_position;
-
-		// Pass the color to the fragment shader.
-		v_color = a_color;
-		}
-
-		</script>
-
-		<script id="line-mesh-fragment-shader" type="notjs">
-
-		// fragment shaders don't have a default precision so we need
-		// to pick one. mediump is a good default
-		precision mediump float;
-
-		// Passed in from the vertex shader.
-		varying vec4 v_color;
-
-		void main() {
-		// gl_FragColor is a special variable a fragment shader
-		// is responsible for setting
-		gl_FragColor = v_color;
-		}
-
-		</script>
-
-		<script id="triangle-mesh-vertex-shader" type="notjs">
-
-		// an attribute will receive data from a buffer
-		attribute vec4 a_position;
-
-		uniform mat4 u_matrix;
-		uniform mat4 u_lighting_rotation;
-
-		varying vec4 v_color_multiplier;
-
-		void main() {
-		// Multiply the position by the matrix.
-		gl_Position = u_matrix * a_position;
-
-		//use position to get color multiplier
-		vec4 rotated_vertex = u_lighting_rotation * a_position;
-		vec3 pos_vector = vec3(rotated_vertex.xyz);
-		vec3 light_vector = vec3(-1.0,-1.0,1.0);
-
-		float dot_product = dot(normalize(light_vector),normalize(pos_vector));
-		float multiplier = (dot_product + 1.0) / 2.0;
-		v_color_multiplier = vec4(vec3(multiplier), 1.0);
-
-		}
-
-		</script>
-
-		<script id="triangle-mesh-fragment-shader" type="notjs">
-
-		// fragment shaders don't have a default precision so we need
-		// to pick one. mediump is a good default
-		precision mediump float;
-
-		uniform vec4 u_color;
-
-		varying vec4 v_color_multiplier;
-
-		void main() {
-		// gl_FragColor is a special variable a fragment shader
-		// is responsible for setting
-		gl_FragColor = u_color * v_color_multiplier;
-		}
-
-		</script>
-
 	</body>
 </html>
+
+<script src="../scripts/app.js"></script>
