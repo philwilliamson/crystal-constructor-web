@@ -1,20 +1,29 @@
 "use strict";
 
-//import needed functions
 import {
-	degToRad,
-	radToDeg,
 	buildSuperCell,
-	drawScene,
+} from './util/model-utils.js';
+
+import {
 	createShader,
 	createProgram,
 	generateMeshData,
 	initializeBuffers,
+	generateSceneObjects,
+	drawScene,
 	updateBuffers,
+} from './util/webgl-utils.js';
+
+import {
+	updateAtomListDisplay,
+} from './util/dom-utils.js';
+
+import {
+	radToDeg,
+	degToRad,
 	transformMatrix,
 	lightingMatrix,
-	generateSceneObjects,
-	updateAtomListDisplay} from './util.js';
+} from './util/math-utils.js';
 
 //set up crystal model object
 var crystal_model = {
