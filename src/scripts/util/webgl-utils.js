@@ -5,7 +5,7 @@ import {
 
 import {
 	getElementColor,
-} from './misc-utils.js';
+} from './model-utils.js';
 
 export function createShader(gl, type, source) {
 	//create shader for webgl context
