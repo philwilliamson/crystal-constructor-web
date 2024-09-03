@@ -17,6 +17,7 @@ p {
   flex-wrap: wrap;
   gap: 20px;
   padding-bottom: 4rem;
+  min-height: calc(100vh - 3.75rem);
 }
 
 input {
