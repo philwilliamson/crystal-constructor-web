@@ -86,11 +86,11 @@ Click `Add Atom` to add that atom to the unit cell atom list. The displayed mode
 
 The model will display all atoms in the super cell while the Unit Cell Atoms list (to the right of the viewport) will show only atoms listed in the unit cell.
 
-To remove an atom, select that atom from the list and click "Remove Atom".
+To remove an atom, select that atom from the list and click `Remove Atom`.
 
 ### POSCAR File Download
 
-Click the `Download POSCAR File` button to down load a POSCAR file of your model's super cell.
+Click the `Download POSCAR File` button to download a POSCAR file of your model's super cell.
 
 ### Viewport Navigation
 
