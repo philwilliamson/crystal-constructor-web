@@ -25,7 +25,8 @@ import {
 	lightingMatrix,
 } from './util/math-utils.js';
 
-// set up crystal model object
+// set up object for crystal model context
+
 var crystal_model = {
 	unit_cell: {
 	a_hat: [1.0, 0.0, 0.0],
@@ -41,6 +42,8 @@ var crystal_model = {
 	c_hat: [0.0, 0.0, 1.0],
 	atoms: []}
 };
+
+// setup data and object entities for webgl context
 
 const lineMeshVertexShaderSource = `
 	// an attribute will receive data from a buffer
@@ -115,7 +118,82 @@ const triangleMeshFragmentShaderSource = `
 	}
 `;
 
-// setup crystal model inputs
+// initialize settings for transformation matrix uniform
+var cell_transform_parameters = {
+	translation: [
+		-0.5*(crystal_model.super_cell.a_hat[0]+crystal_model.super_cell.b_hat[0]+crystal_model.super_cell.c_hat[0]), 
+		-0.5*(crystal_model.super_cell.a_hat[1]+crystal_model.super_cell.b_hat[1]+crystal_model.super_cell.c_hat[1]),
+		-0.5*(crystal_model.super_cell.a_hat[2]+crystal_model.super_cell.b_hat[2]+crystal_model.super_cell.c_hat[2])
+	],
+	rotation: [degToRad(30), degToRad(0), degToRad(125)],
+	scale: [600, 600, 600]
+};
+
+// generate transformation matrices based on parameters
+var cell_transform_matrix = transformMatrix(cell_transform_parameters);
+var atom_lighting_matrix = lightingMatrix(cell_transform_parameters);
+
+// set up canvas
+var canvas = document.getElementById("main-canvas");
+canvas.width = 800;
+canvas.height = 600;
+
+// setup WebGL context
+var gl = canvas.getContext("webgl");
+
+if (!gl) {
+	console.log('WebGL Failed');
+} else {
+	console.log('WebGL Success');
+}
+
+// tell WebGL how to convert from clip space to pixels
+gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+// create shaders, programs, attribute and uniform locations
+// one shader program for super cell (line mesh) and one for spheres (triangle mesh)
+
+// create GLSL shaders, upload the GLSL source, compile the shaders
+var lineMeshVertexShader = createShader(gl, gl.VERTEX_SHADER, lineMeshVertexShaderSource);
+var lineMeshFragmentShader = createShader(gl, gl.FRAGMENT_SHADER, lineMeshFragmentShaderSource);
+
+var triangleMeshVertexShader = createShader(gl, gl.VERTEX_SHADER, triangleMeshVertexShaderSource);
+var triangleMeshFragmentShader = createShader(gl, gl.FRAGMENT_SHADER, triangleMeshFragmentShaderSource);
+
+// link the shaders into programs
+var programs = {
+	lineMeshProgram: createProgram(gl, lineMeshVertexShader, lineMeshFragmentShader),
+	triangleMeshProgram: createProgram(gl, triangleMeshVertexShader, triangleMeshFragmentShader)
+};
+
+// look up attribute and uniform locations.
+var program_locations = {
+	line_mesh_program_locations: {
+		a_position_location: gl.getAttribLocation(programs.lineMeshProgram, "a_position"),
+		a_color_location: gl.getAttribLocation(programs.lineMeshProgram, "a_color"),
+		u_matrix_location: gl.getUniformLocation(programs.lineMeshProgram, "u_matrix")
+	},
+	triangle_mesh_program_locations: {
+		a_position_location: gl.getAttribLocation(programs.triangleMeshProgram, "a_position"),
+		u_matrix_location: gl.getUniformLocation(programs.triangleMeshProgram, "u_matrix"),
+		u_lighting_rotation_location: gl.getUniformLocation(programs.triangleMeshProgram, "u_lighting_rotation"),
+		u_color_location: gl.getUniformLocation(programs.triangleMeshProgram, "u_color")
+	},
+};
+
+// create buffers and upload vertex data
+
+// generate mesh buffer data from crstal model
+var mesh_data = generateMeshData(crystal_model);
+var mesh_buffers = initializeBuffers(gl, mesh_data);
+
+// generate objects with buffer handles, program locations, and tranformation matrices
+var scene_objects = generateSceneObjects(mesh_buffers, programs, program_locations, cell_transform_matrix, atom_lighting_matrix);
+
+drawScene(gl, scene_objects, crystal_model);
+
+// setup event listeners for user interface
+
 // element selection
 var CURRENT_SELECTED_ELEMENT = null;
 // add event listeners to periodic table element
@@ -164,7 +242,7 @@ basis_radio_input.onclick = function(){
 	// reveal basis vector input and hide parameter input
 	basis_section.classList.remove('hidden-input-section');
 	parameter_section.classList.add('hidden-input-section');
-}
+};
 
 parameters_radio_input.onclick = function(){
 	var basis_section = document.getElementById("lattice-basis-input");
@@ -172,7 +250,7 @@ parameters_radio_input.onclick = function(){
 	// reveal parameter input and hide basis vector input
 	basis_section.classList.add('hidden-input-section');
 	parameter_section.classList.remove('hidden-input-section');
-}
+};
 
 // event listener for reset model button
 reset_model_button.onclick = function(){
@@ -211,11 +289,15 @@ reset_model_button.onclick = function(){
 	updateAtomListDisplay(crystal_model); 
 
 	// set information for transformation matrix uniform
-	cell_transform_parameters = {translation: [-0.5*(crystal_model.super_cell.a_hat[0]+crystal_model.super_cell.b_hat[0]+crystal_model.super_cell.c_hat[0]), 
-								-0.5*(crystal_model.super_cell.a_hat[1]+crystal_model.super_cell.b_hat[1]+crystal_model.super_cell.c_hat[1]),
-								-0.5*(crystal_model.super_cell.a_hat[2]+crystal_model.super_cell.b_hat[2]+crystal_model.super_cell.c_hat[2])],
-									rotation: [degToRad(30), degToRad(0), degToRad(125)],
-									scale: [600, 600, 600]};
+	cell_transform_parameters = {
+		translation: [
+			-0.5*(crystal_model.super_cell.a_hat[0]+crystal_model.super_cell.b_hat[0]+crystal_model.super_cell.c_hat[0]), 
+			-0.5*(crystal_model.super_cell.a_hat[1]+crystal_model.super_cell.b_hat[1]+crystal_model.super_cell.c_hat[1]),
+			-0.5*(crystal_model.super_cell.a_hat[2]+crystal_model.super_cell.b_hat[2]+crystal_model.super_cell.c_hat[2])
+		],
+		rotation: [degToRad(30), degToRad(0), degToRad(125)],
+		scale: [600, 600, 600],
+	};
 
 	// generate transformation matrix based on parameters
 	var cell_transform_matrix = transformMatrix(cell_transform_parameters);
@@ -247,7 +329,7 @@ remove_atom_button.onclick = function(){
 		drawScene(gl, scene_objects, crystal_model);
 		updateAtomListDisplay(crystal_model);
 	}
-}
+};
 
 // event listener for add atom button
 add_atom_button_input.onclick = function(){
@@ -407,9 +489,11 @@ build_button_input.onclick = function(){
 
 			crystal_model = buildSuperCell(crystal_model);
 
-			cell_transform_parameters.translation = [-0.5*(crystal_model.super_cell.a_hat[0]+crystal_model.super_cell.b_hat[0]+crystal_model.super_cell.c_hat[0]), 
-									-0.5*(crystal_model.super_cell.a_hat[1]+crystal_model.super_cell.b_hat[1]+crystal_model.super_cell.c_hat[1]),
-									-0.5*(crystal_model.super_cell.a_hat[2]+crystal_model.super_cell.b_hat[2]+crystal_model.super_cell.c_hat[2])]
+			cell_transform_parameters.translation = [
+				-0.5*(crystal_model.super_cell.a_hat[0]+crystal_model.super_cell.b_hat[0]+crystal_model.super_cell.c_hat[0]), 
+				-0.5*(crystal_model.super_cell.a_hat[1]+crystal_model.super_cell.b_hat[1]+crystal_model.super_cell.c_hat[1]),
+				-0.5*(crystal_model.super_cell.a_hat[2]+crystal_model.super_cell.b_hat[2]+crystal_model.super_cell.c_hat[2])
+			];
 			
 			// set scale factor based on basis vector magnitudes and supercell size
 			var a_super_cell_length = a_magn * a_hat_multiplier;
@@ -543,9 +627,11 @@ build_button_input.onclick = function(){
 
 			crystal_model = buildSuperCell(crystal_model);
 
-			cell_transform_parameters.translation = [-0.5*(crystal_model.super_cell.a_hat[0]+crystal_model.super_cell.b_hat[0]+crystal_model.super_cell.c_hat[0]), 
-									-0.5*(crystal_model.super_cell.a_hat[1]+crystal_model.super_cell.b_hat[1]+crystal_model.super_cell.c_hat[1]),
-									-0.5*(crystal_model.super_cell.a_hat[2]+crystal_model.super_cell.b_hat[2]+crystal_model.super_cell.c_hat[2])]
+			cell_transform_parameters.translation = [
+				-0.5*(crystal_model.super_cell.a_hat[0]+crystal_model.super_cell.b_hat[0]+crystal_model.super_cell.c_hat[0]), 
+				-0.5*(crystal_model.super_cell.a_hat[1]+crystal_model.super_cell.b_hat[1]+crystal_model.super_cell.c_hat[1]),
+				-0.5*(crystal_model.super_cell.a_hat[2]+crystal_model.super_cell.b_hat[2]+crystal_model.super_cell.c_hat[2])
+			];
 			
 			// set scale factor based on basis vector magnitudes and supercell size
 			var a_super_cell_length = a_latt_param * a_hat_multiplier;
@@ -586,23 +672,6 @@ build_button_input.onclick = function(){
 		}
 	}
 };
-
-
-// set information for transformation matrix uniform
-var cell_transform_parameters = {translation: [-0.5*(crystal_model.super_cell.a_hat[0]+crystal_model.super_cell.b_hat[0]+crystal_model.super_cell.c_hat[0]), 
-							-0.5*(crystal_model.super_cell.a_hat[1]+crystal_model.super_cell.b_hat[1]+crystal_model.super_cell.c_hat[1]),
-							-0.5*(crystal_model.super_cell.a_hat[2]+crystal_model.super_cell.b_hat[2]+crystal_model.super_cell.c_hat[2])],
-								rotation: [degToRad(30), degToRad(0), degToRad(125)],
-								scale: [600, 600, 600]};
-
-// generate transformation matrices based on parameters
-var cell_transform_matrix = transformMatrix(cell_transform_parameters);
-var atom_lighting_matrix = lightingMatrix(cell_transform_parameters);
-
-// set up canvas
-var canvas = document.getElementById("main-canvas");
-canvas.width = 800;
-canvas.height = 600;
 
 // set up canvas event listeners
 var CANVAS_IS_CLICKED = false;
@@ -649,7 +718,6 @@ canvas.addEventListener("wheel", function(e){
 	
 	scene_objects = generateSceneObjects(mesh_buffers, programs, program_locations, cell_transform_matrix, atom_lighting_matrix)
 	drawScene(gl, scene_objects, crystal_model);
-
 });
 
 // event listeners for transformation buttons
@@ -729,57 +797,7 @@ document.getElementById('rotate-down-button').onclick = function(){
 	drawScene(gl, scene_objects, crystal_model);
 };
 
-// setup WebGL context
-var gl = canvas.getContext("webgl");
-
-if (!gl) {
-	console.log('WebGL Failed')
-} else {
-	console.log('WebGL Success')
-}
-
-// tell WebGL how to convert from clip space to pixels
-gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-
-// create shaders, programs, attribute and uniform locations
-// one shader program for super cell (line mesh) and one for spheres (triangle mesh)
-
-// create GLSL shaders, upload the GLSL source, compile the shaders
-var lineMeshVertexShader = createShader(gl, gl.VERTEX_SHADER, lineMeshVertexShaderSource);
-var lineMeshFragmentShader = createShader(gl, gl.FRAGMENT_SHADER, lineMeshFragmentShaderSource);
-
-var triangleMeshVertexShader = createShader(gl, gl.VERTEX_SHADER, triangleMeshVertexShaderSource);
-var triangleMeshFragmentShader = createShader(gl, gl.FRAGMENT_SHADER, triangleMeshFragmentShaderSource);
-
-// link the two shaders into a program
-var programs = {lineMeshProgram: createProgram(gl, lineMeshVertexShader, lineMeshFragmentShader),
-				triangleMeshProgram: createProgram(gl, triangleMeshVertexShader, triangleMeshFragmentShader)};
-
-// look up attribute and uniform locations.
-var program_locations = {line_mesh_program_locations: {a_position_location: gl.getAttribLocation(programs.lineMeshProgram, "a_position"),
-														a_color_location: gl.getAttribLocation(programs.lineMeshProgram, "a_color"),
-														u_matrix_location: gl.getUniformLocation(programs.lineMeshProgram, "u_matrix")},
-						triangle_mesh_program_locations: {a_position_location: gl.getAttribLocation(programs.triangleMeshProgram, "a_position"),
-														u_matrix_location: gl.getUniformLocation(programs.triangleMeshProgram, "u_matrix"),
-														u_lighting_rotation_location: gl.getUniformLocation(programs.triangleMeshProgram, "u_lighting_rotation"),
-														u_color_location: gl.getUniformLocation(programs.triangleMeshProgram, "u_color")}};
-
-
-
-// create buffers and upload vertex data
-
-// generate mesh data from crstal model
-var mesh_data = generateMeshData(crystal_model);
-
-// initialize buffers and generate objects with buffer handles
-var mesh_buffers = initializeBuffers(gl, mesh_data);
-
-// generate objects with buffer handles, program locations, and tranformation matrices
-var scene_objects = generateSceneObjects(mesh_buffers, programs, program_locations, cell_transform_matrix, atom_lighting_matrix);
-
-drawScene(gl, scene_objects, crystal_model);
-
-// download file button to get poscar file based on model
+// setup event listener for download poscar file button
 var poscar_button = document.getElementById('poscar-button');
 
 poscar_button.addEventListener('click', () => {
