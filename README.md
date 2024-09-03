@@ -1,6 +1,6 @@
 # Crystal Constructor
 
-A web application for constructing atomic crystal models.
+A browser-based application for constructing atomic crystal models.
 
 Built using JavaScript and WebGL on top of the [Astro](https://astro.build/) framework.
 
@@ -19,6 +19,8 @@ A live version is available [here](https://philcodes.com/projects/crystal-constr
     - [Viewport Navigation](#viewport-navigation)
 
 ## Running Locally
+
+You will need to have [Node.js and npm](https://nodejs.org/) installed in order to run this project locally.
 
 Clone this repository and cd into the project directory:
 
