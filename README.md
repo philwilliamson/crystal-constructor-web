@@ -8,6 +8,7 @@ A live version is available [here](https://philcodes.com/projects/crystal-constr
 
 ## Table of Contents
 - [Running Locally](#running-locally)
+- [Project Structure](#project-structure)
 - [User Guide](#user-guide)
     - [Defining the Unit Cell](#defining-the-unit-cell)
         - [Lattice Basis Vectors](#lattice-basis-vectors)
@@ -37,6 +38,29 @@ npm run dev
 ```
 
 Navigate to `localhost:4321` in your browser to see the running local site.
+
+## Project Structure
+```
+.
+├── astro.config.mjs
+├── package.json
+├── package-lock.json
+├── README.md
+├── src
+│   ├── env.d.ts
+│   ├── pages
+│   │   └── index.astro // generates index page
+│   ├── scripts
+│   │   ├── app.js  // main script for initializing interactive elements
+│   │   └── util 
+│   │       ├── dom-utils.js    // functions for updating DOM elements
+│   │       ├── math-utils.js   // functions for matrix and other math operations
+│   │       ├── model-utils.js  // functions for updating crystal model
+│   │       └── webgl-utils.js  // functions for working with WebGL
+│   └── styles
+│       └── styles.css
+└── tsconfig.json
+```
 
 ## User Guide
 
