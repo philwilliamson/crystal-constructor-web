@@ -25,7 +25,7 @@ import {
 	lightingMatrix,
 } from './util/math-utils.js';
 
-//set up crystal model object
+// set up crystal model object
 var crystal_model = {
 	unit_cell: {
 	a_hat: [1.0, 0.0, 0.0],
@@ -43,36 +43,36 @@ var crystal_model = {
 };
 
 const lineMeshVertexShaderSource = `
-        // an attribute will receive data from a buffer
-		attribute vec4 a_position;
-		attribute vec4 a_color;
+	// an attribute will receive data from a buffer
+	attribute vec4 a_position;
+	attribute vec4 a_color;
 
-		uniform mat4 u_matrix;
+	uniform mat4 u_matrix;
 
-		varying vec4 v_color;
+	varying vec4 v_color;
 
-		void main() {
-		// Multiply the position by the matrix.
-		gl_Position = u_matrix * a_position;
+	void main() {
+	// multiply the position by the matrix.
+	gl_Position = u_matrix * a_position;
 
-		// Pass the color to the fragment shader.
-		v_color = a_color;
-		}
+	// pass the color to the fragment shader.
+	v_color = a_color;
+	}
 `;
 
 const lineMeshFragmentShaderSource = `
-        // fragment shaders don't have a default precision so we need
-		// to pick one. mediump is a good default
-		precision mediump float;
+	// fragment shaders don't have a default precision so we need
+	// to pick one. mediump is a good default
+	precision mediump float;
 
-		// Passed in from the vertex shader.
-		varying vec4 v_color;
+	// passed in from the vertex shader.
+	varying vec4 v_color;
 
-		void main() {
-		// gl_FragColor is a special variable a fragment shader
-		// is responsible for setting
-		gl_FragColor = v_color;
-		}
+	void main() {
+	// gl_FragColor is a special variable a fragment shader
+	// is responsible for setting
+	gl_FragColor = v_color;
+	}
 `;
 
 const triangleMeshVertexShaderSource = `
@@ -85,10 +85,10 @@ const triangleMeshVertexShaderSource = `
     varying vec4 v_color_multiplier;
 
     void main() {
-    // Multiply the position by the matrix.
+    // multiply the position by the matrix.
     gl_Position = u_matrix * a_position;
 
-    //use position to get color multiplier
+    // use position to get color multiplier
     vec4 rotated_vertex = u_lighting_rotation * a_position;
     vec3 pos_vector = vec3(rotated_vertex.xyz);
     vec3 light_vector = vec3(-1.0,-1.0,1.0);
@@ -100,25 +100,25 @@ const triangleMeshVertexShaderSource = `
 `;
 
 const triangleMeshFragmentShaderSource = `
-        // fragment shaders don't have a default precision so we need
-		// to pick one. mediump is a good default
-		precision mediump float;
+	// fragment shaders don't have a default precision so we need
+	// to pick one. mediump is a good default
+	precision mediump float;
 
-		uniform vec4 u_color;
+	uniform vec4 u_color;
 
-		varying vec4 v_color_multiplier;
+	varying vec4 v_color_multiplier;
 
-		void main() {
-		// gl_FragColor is a special variable a fragment shader
-		// is responsible for setting
-		gl_FragColor = u_color * v_color_multiplier;
-		}
+	void main() {
+	// gl_FragColor is a special variable a fragment shader
+	// is responsible for setting
+	gl_FragColor = u_color * v_color_multiplier;
+	}
 `;
 
-//setup crystal model inputs
-//element selection
+// setup crystal model inputs
+// element selection
 var CURRENT_SELECTED_ELEMENT = null;
-//add event listeners to periodic table element
+// add event listeners to periodic table element
 [...document.querySelectorAll('.element-symbol')].forEach(function(symbol) {
 	symbol.addEventListener('click', function() {
 		var previously_selected_element = document.querySelector('.selected-element');
@@ -131,7 +131,7 @@ var CURRENT_SELECTED_ELEMENT = null;
 	});
 });
 
-//grab button and input elements
+// grab button and input elements
 var reset_model_button = document.getElementById("reset-button");
 var remove_atom_button = document.getElementById('remove-atom-button');
 var x_atom_pos_input = document.getElementById('x_atom_pos');
@@ -157,11 +157,11 @@ var b_hat_multiplier_input = document.getElementById('b_hat_multiplier');
 var c_hat_multiplier_input = document.getElementById('c_hat_multiplier');
 var build_button_input = document.getElementById('build-button');
 
-//event listeners for changing basis input mode
+// event listeners for changing basis input mode
 basis_radio_input.onclick = function(){
 	var basis_section = document.getElementById("lattice-basis-input");
 	var parameter_section = document.getElementById("lattice-parameter-input");
-	//reveal basis vector input and hide parameter input
+	// reveal basis vector input and hide parameter input
 	basis_section.classList.remove('hidden-input-section');
 	parameter_section.classList.add('hidden-input-section');
 }
@@ -169,18 +169,18 @@ basis_radio_input.onclick = function(){
 parameters_radio_input.onclick = function(){
 	var basis_section = document.getElementById("lattice-basis-input");
 	var parameter_section = document.getElementById("lattice-parameter-input");
-	//reveal parameter input and hide basis vector input
+	// reveal parameter input and hide basis vector input
 	basis_section.classList.add('hidden-input-section');
 	parameter_section.classList.remove('hidden-input-section');
 }
 
-//event listener for reset model button
+// event listener for reset model button
 reset_model_button.onclick = function(){
-	//reset model to orthonormal basis
+	// reset model to orthonormal basis
 	crystal_model.unit_cell.a_hat = [1,0,0];
 	crystal_model.unit_cell.b_hat = [0,1,0];
 	crystal_model.unit_cell.c_hat = [0,0,1];
-	//clear atoms
+	// clear atoms
 	crystal_model.unit_cell.atoms = [];
 
 	crystal_model.super_cell.a_hat_multiplier = 1.0;
@@ -188,7 +188,7 @@ reset_model_button.onclick = function(){
 	crystal_model.super_cell.c_hat_multiplier = 1.0;
 
 	crystal_model = buildSuperCell(crystal_model);
-	//reset input field values
+	// reset input field values
 	x_atom_pos_input.value = String(0.0.toFixed(3));
 	y_atom_pos_input.value = String(0.0.toFixed(3));
 	z_atom_pos_input.value = String(0.0.toFixed(3));
@@ -210,24 +210,24 @@ reset_model_button.onclick = function(){
 	
 	updateAtomListDisplay(crystal_model); 
 
-	//Set information for transformation matrix uniform
+	// set information for transformation matrix uniform
 	cell_transform_parameters = {translation: [-0.5*(crystal_model.super_cell.a_hat[0]+crystal_model.super_cell.b_hat[0]+crystal_model.super_cell.c_hat[0]), 
 								-0.5*(crystal_model.super_cell.a_hat[1]+crystal_model.super_cell.b_hat[1]+crystal_model.super_cell.c_hat[1]),
 								-0.5*(crystal_model.super_cell.a_hat[2]+crystal_model.super_cell.b_hat[2]+crystal_model.super_cell.c_hat[2])],
 									rotation: [degToRad(30), degToRad(0), degToRad(125)],
 									scale: [600, 600, 600]};
 
-	//generate transformation matrix based on parameters
+	// generate transformation matrix based on parameters
 	var cell_transform_matrix = transformMatrix(cell_transform_parameters);
 	var atom_lighting_matrix = lightingMatrix(cell_transform_parameters);
 
-	//generate mesh data from crstal model
+	// generate mesh data from crstal model
 	mesh_data = generateMeshData(crystal_model);
 
-	//initialize buffers and generate objects with buffer handles
+	// update buffers and generate objects with buffer handles
 	updateBuffers(gl, mesh_data, mesh_buffers);
 
-	//Generate objects with buffer handles, program locations, and tranformation matrices
+	// generate objects with buffer handles, program locations, and tranformation matrices
 	scene_objects = generateSceneObjects(mesh_buffers, programs, program_locations, cell_transform_matrix, atom_lighting_matrix);
 
 	drawScene(gl, scene_objects, crystal_model);
@@ -236,7 +236,7 @@ reset_model_button.onclick = function(){
 	document.getElementById('atom-position-feedback').querySelectorAll('*').forEach(n => n.remove());
 };
 
-//event listener to remove atom
+// event listener to remove atom
 remove_atom_button.onclick = function(){
 	var current_selected_item = document.querySelector('.selected-item')
 
@@ -249,7 +249,7 @@ remove_atom_button.onclick = function(){
 	}
 }
 
-//event listener for add atom button
+// event listener for add atom button
 add_atom_button_input.onclick = function(){
 	var atom_position_feedback = document.getElementById('atom-position-feedback');
 	
@@ -259,7 +259,7 @@ add_atom_button_input.onclick = function(){
 		var y_atom_pos = parseFloat(y_atom_pos_input.value);
 		var z_atom_pos = parseFloat(z_atom_pos_input.value);
 
-		//provide feedback if atom position is invalid
+		// provide feedback if atom position is invalid
 		if (isNaN(x_atom_pos)
 			|| isNaN(y_atom_pos)
 			|| isNaN(z_atom_pos)) {
@@ -278,7 +278,7 @@ add_atom_button_input.onclick = function(){
 			atom_position_feedback.appendChild(new_para);
 		} else {
 
-			//fix input field values
+			// fix input field values
 			x_atom_pos_input.value = x_atom_pos.toFixed(3);
 			y_atom_pos_input.value = y_atom_pos.toFixed(3);
 			z_atom_pos_input.value = z_atom_pos.toFixed(3);
@@ -312,10 +312,10 @@ add_atom_button_input.onclick = function(){
 	}
 };
 
-//event listener for build button
+// event listener for build button
 build_button_input.onclick = function(){
 
-	//check which input mode is active
+	// check which input mode is active
 	if (basis_radio_input.checked) {
 		var a_hat_x = parseFloat(a_hat_x_input.value);
 		var b_hat_x = parseFloat(b_hat_x_input.value);
@@ -327,17 +327,17 @@ build_button_input.onclick = function(){
 		var b_hat_multiplier = parseFloat(b_hat_multiplier_input.value);
 		var c_hat_multiplier = parseFloat(c_hat_multiplier_input.value);
 		
-		//a, b, and c vector magnitudes
+		// a, b, and c vector magnitudes
 		var a_magn = Math.sqrt(Math.pow(a_hat_x,2));
 		var b_magn = Math.sqrt(Math.pow(b_hat_x,2) + Math.pow(b_hat_y,2));
 		var c_magn = Math.sqrt(Math.pow(c_hat_x,2) + Math.pow(c_hat_y,2) + Math.pow(c_hat_z,2));
 
-		//angles between basis vectors
+		// angles between basis vectors
 		var alpha = Math.acos((b_hat_x*c_hat_x + b_hat_y*c_hat_y)/(b_magn*c_magn))
 		var beta = Math.acos((c_hat_x*a_hat_x)/(c_magn*a_magn))
 		var gamma = Math.acos((a_hat_x*b_hat_x)/(a_magn*b_magn))
 
-		//give feedback on possibly invalid lattice angles
+		// give feedback on possibly invalid lattice angles
 		var lattice_parameter_feedback = document.getElementById('lattice-parameters-feedback');
 		
 		if (isNaN(a_hat_x)
@@ -379,7 +379,7 @@ build_button_input.onclick = function(){
 			new_para.style.color = 'red';
 			lattice_parameter_feedback.appendChild(new_para);
 		} else {			
-			//fix input field values
+			// fix input field values
 			a_hat_x_input.value = a_hat_x.toFixed(3);
 			b_hat_x_input.value = b_hat_x.toFixed(3);
 			b_hat_y_input.value = b_hat_y.toFixed(3);
@@ -396,7 +396,7 @@ build_button_input.onclick = function(){
 			new_para.style.color = 'green';
 			lattice_parameter_feedback.appendChild(new_para);
 
-			//modify crystal model based on input
+			// modify crystal model based on input
 			crystal_model.unit_cell.a_hat = [a_hat_x, 0.0, 0.0];
 			crystal_model.unit_cell.b_hat = [b_hat_x, b_hat_y, 0.0];
 			crystal_model.unit_cell.c_hat = [c_hat_x, c_hat_y, c_hat_z];
@@ -411,12 +411,12 @@ build_button_input.onclick = function(){
 									-0.5*(crystal_model.super_cell.a_hat[1]+crystal_model.super_cell.b_hat[1]+crystal_model.super_cell.c_hat[1]),
 									-0.5*(crystal_model.super_cell.a_hat[2]+crystal_model.super_cell.b_hat[2]+crystal_model.super_cell.c_hat[2])]
 			
-			//set scale factor based on basis vector magnitudes and supercell size
+			// set scale factor based on basis vector magnitudes and supercell size
 			var a_super_cell_length = a_magn * a_hat_multiplier;
 			var b_super_cell_length = b_magn * b_hat_multiplier;
 			var c_super_cell_length = c_magn * c_hat_multiplier;
 
-			//set scale transformation according to longest supercell basis vector
+			// set scale transformation according to longest supercell basis vector
 			if (a_super_cell_length >= b_super_cell_length && a_super_cell_length >= c_super_cell_length){
 				cell_transform_parameters.scale = [600/a_super_cell_length, 600/a_super_cell_length, 600/a_super_cell_length];
 			} else if (b_super_cell_length >= a_super_cell_length && b_super_cell_length >= c_super_cell_length) {
@@ -429,18 +429,18 @@ build_button_input.onclick = function(){
 			cell_transform_matrix = transformMatrix(cell_transform_parameters);
 			atom_lighting_matrix = lightingMatrix(cell_transform_parameters);
 
-			//generate mesh data from crystal model
+			// generate mesh data from crystal model
 			mesh_data = generateMeshData(crystal_model);
 
-			//initialize buffers and generate objects with buffer handles
+			// initialize buffers and generate objects with buffer handles
 			updateBuffers(gl, mesh_data, mesh_buffers);
 
-			//generate objects with buffer handles, program locations, and tranformation matrices
+			// generate objects with buffer handles, program locations, and tranformation matrices
 			scene_objects = generateSceneObjects(mesh_buffers, programs, program_locations, cell_transform_matrix, atom_lighting_matrix);
 
 			drawScene(gl, scene_objects, crystal_model);
 			
-			//update basis params input fields values
+			// update basis params input fields values
 			a_param_input.value = String(a_magn.toFixed(3));
 			b_param_input.value = String(b_magn.toFixed(3));
 			c_param_input.value = String(c_magn.toFixed(3));
@@ -460,7 +460,7 @@ build_button_input.onclick = function(){
 		var b_hat_multiplier = parseFloat(b_hat_multiplier_input.value);
 		var c_hat_multiplier = parseFloat(c_hat_multiplier_input.value);
 
-		//calculate basis vectors components based on length and angle parameters
+		// calculate basis vectors components based on length and angle parameters
 		var a1 = a_latt_param;
 		var b1 = b_latt_param * Math.cos(degToRad(gamma_latt_param));
 		var b2 = b_latt_param * Math.sin(degToRad(gamma_latt_param));
@@ -470,7 +470,7 @@ build_button_input.onclick = function(){
 		
 
 
-		//give feedback on lattice angles
+		// give feedback on lattice angles
 		var lattice_parameter_feedback = document.getElementById('lattice-parameters-feedback');
 		
 		var min_alpha = radToDeg(Math.acos(Math.cos(degToRad(beta_latt_param))*Math.cos(degToRad(gamma_latt_param)) + Math.sin(degToRad(beta_latt_param))*Math.sin(degToRad(gamma_latt_param))));
@@ -515,7 +515,7 @@ build_button_input.onclick = function(){
 			new_para.style.color = 'red';
 			lattice_parameter_feedback.appendChild(new_para);
 		} else {
-			//fix input field values
+			// fix input field values
 			a_param_input.value = a_latt_param.toFixed(3);
 			b_param_input.value = b_latt_param.toFixed(3);
 			c_param_input.value = c_latt_param.toFixed(3);
@@ -563,19 +563,19 @@ build_button_input.onclick = function(){
 			cell_transform_matrix = transformMatrix(cell_transform_parameters);
 			atom_lighting_matrix = lightingMatrix(cell_transform_parameters);
 
-			//reset buffers and drawscene
-			//generate mesh data from crystal model
+			// reset buffers and drawscene
+			// generate mesh data from crystal model
 			mesh_data = generateMeshData(crystal_model);
 
-			//initialize buffers and generate objects with buffer handles
+			// initialize buffers and generate objects with buffer handles
 			updateBuffers(gl, mesh_data, mesh_buffers);
 
-			//Generate objects with buffer handles, program locations, and tranformation matrices
+			// generate objects with buffer handles, program locations, and tranformation matrices
 			scene_objects = generateSceneObjects(mesh_buffers, programs, program_locations, cell_transform_matrix, atom_lighting_matrix);
 
 			drawScene(gl, scene_objects, crystal_model);
 			
-			//update basis vectors input fields
+			// update basis vectors input fields
 			a_hat_x_input.value = String(crystal_model.unit_cell.a_hat[0].toFixed(3));
 			b_hat_x_input.value = String(crystal_model.unit_cell.b_hat[0].toFixed(3));
 			b_hat_y_input.value = String(crystal_model.unit_cell.b_hat[1].toFixed(3));
@@ -588,23 +588,23 @@ build_button_input.onclick = function(){
 };
 
 
-//Set information for transformation matrix uniform
+// set information for transformation matrix uniform
 var cell_transform_parameters = {translation: [-0.5*(crystal_model.super_cell.a_hat[0]+crystal_model.super_cell.b_hat[0]+crystal_model.super_cell.c_hat[0]), 
 							-0.5*(crystal_model.super_cell.a_hat[1]+crystal_model.super_cell.b_hat[1]+crystal_model.super_cell.c_hat[1]),
 							-0.5*(crystal_model.super_cell.a_hat[2]+crystal_model.super_cell.b_hat[2]+crystal_model.super_cell.c_hat[2])],
 								rotation: [degToRad(30), degToRad(0), degToRad(125)],
 								scale: [600, 600, 600]};
 
-//generate transformation matrix based on parameters
+// generate transformation matrices based on parameters
 var cell_transform_matrix = transformMatrix(cell_transform_parameters);
 var atom_lighting_matrix = lightingMatrix(cell_transform_parameters);
 
-//Set up canvas
+// set up canvas
 var canvas = document.getElementById("main-canvas");
 canvas.width = 800;
 canvas.height = 600;
 
-//Set up canvas event listeners
+// set up canvas event listeners
 var CANVAS_IS_CLICKED = false;
 
 canvas.addEventListener("mousedown", function(){
@@ -616,7 +616,7 @@ document.addEventListener("mouseup", function(){
 });
 
 canvas.addEventListener("mousemove", function(e){
-	//event listener for rotating model based on mouse movement
+	// event listener for rotating model based on mouse movement
 	e.preventDefault();
 	if (CANVAS_IS_CLICKED){
 		cell_transform_parameters.rotation[2] = cell_transform_parameters.rotation[2] += 0.01 * e.movementX;
@@ -631,7 +631,7 @@ canvas.addEventListener("mousemove", function(e){
 });
 
 canvas.addEventListener("wheel", function(e){
-	//event listener for scaling model based on mouse movement
+	// event listener for scaling model based on mouse movement
 	e.preventDefault();
 	var scale_factor = 0.001;
 	var scale_constant = cell_transform_parameters.scale[0];
@@ -652,7 +652,7 @@ canvas.addEventListener("wheel", function(e){
 
 });
 
-//event listeners for transformation buttons
+// event listeners for transformation buttons
 document.getElementById('zoom-in-button').onclick = function(){
 	var scale_factor = 0.1;
 	var scale_constant = cell_transform_parameters.scale[0];
@@ -729,7 +729,7 @@ document.getElementById('rotate-down-button').onclick = function(){
 	drawScene(gl, scene_objects, crystal_model);
 };
 
-//Setup WebGL context
+// setup WebGL context
 var gl = canvas.getContext("webgl");
 
 if (!gl) {
@@ -738,11 +738,11 @@ if (!gl) {
 	console.log('WebGL Success')
 }
 
-// Tell WebGL how to convert from clip space to pixels
+// tell WebGL how to convert from clip space to pixels
 gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
-//create shaders, programs, attribute and uniform locations
-//one shader program for super cell (line mesh) and one for spheres (triangle mesh)
+// create shaders, programs, attribute and uniform locations
+// one shader program for super cell (line mesh) and one for spheres (triangle mesh)
 
 // create GLSL shaders, upload the GLSL source, compile the shaders
 var lineMeshVertexShader = createShader(gl, gl.VERTEX_SHADER, lineMeshVertexShaderSource);
@@ -751,7 +751,7 @@ var lineMeshFragmentShader = createShader(gl, gl.FRAGMENT_SHADER, lineMeshFragme
 var triangleMeshVertexShader = createShader(gl, gl.VERTEX_SHADER, triangleMeshVertexShaderSource);
 var triangleMeshFragmentShader = createShader(gl, gl.FRAGMENT_SHADER, triangleMeshFragmentShaderSource);
 
-// Link the two shaders into a program
+// link the two shaders into a program
 var programs = {lineMeshProgram: createProgram(gl, lineMeshVertexShader, lineMeshFragmentShader),
 				triangleMeshProgram: createProgram(gl, triangleMeshVertexShader, triangleMeshFragmentShader)};
 
@@ -766,24 +766,24 @@ var program_locations = {line_mesh_program_locations: {a_position_location: gl.g
 
 
 
-//create buffers and upload vertex data
+// create buffers and upload vertex data
 
-//generate mesh data from crstal model
+// generate mesh data from crstal model
 var mesh_data = generateMeshData(crystal_model);
 
-//initialize buffers and generate objects with buffer handles
+// initialize buffers and generate objects with buffer handles
 var mesh_buffers = initializeBuffers(gl, mesh_data);
 
-//Generate objects with buffer handles, program locations, and tranformation matrices
+// generate objects with buffer handles, program locations, and tranformation matrices
 var scene_objects = generateSceneObjects(mesh_buffers, programs, program_locations, cell_transform_matrix, atom_lighting_matrix);
 
 drawScene(gl, scene_objects, crystal_model);
 
-//download file button to get poscar file based on model
+// download file button to get poscar file based on model
 var poscar_button = document.getElementById('poscar-button');
 
 poscar_button.addEventListener('click', () => {
-	//get info from crystal model needed to generate poscar file
+	// get info from crystal model needed to generate poscar file
 	var element_types = [];
 	var element_counts = [];
 	crystal_model.super_cell.atoms.forEach(function(atom){
@@ -802,21 +802,21 @@ poscar_button.addEventListener('click', () => {
 		element_counts.push(current_count);
 	});
 
-	//generate string for file
-	//add basis vectors
+	// generate string for file
+	// add basis vectors
 	var file_string = 'POSCAR file written by Crystal Constructor\n1.0\n'
 	file_string += String(crystal_model.super_cell.a_hat[0])+' '+String(crystal_model.super_cell.a_hat[1])+' '+String(crystal_model.super_cell.a_hat[2])+'\n';
 	file_string += String(crystal_model.super_cell.b_hat[0])+' '+String(crystal_model.super_cell.b_hat[1])+' '+String(crystal_model.super_cell.b_hat[2])+'\n';
 	file_string += String(crystal_model.super_cell.c_hat[0])+' '+String(crystal_model.super_cell.c_hat[1])+' '+String(crystal_model.super_cell.c_hat[2])+'\n';
 
-	//add atom types
+	// add atom types
 	element_types.forEach(function(element){
 		file_string += element + ' ';
 	});
 
 	file_string += '\n';
 
-	//add atom types and counts
+	// add counts
 	element_counts.forEach(function(count){
 		file_string += String(count) + ' ';
 	});
@@ -825,7 +825,7 @@ poscar_button.addEventListener('click', () => {
 
 	file_string += 'direct\n';
 
-	//add atom positions
+	// add atom positions
 	element_types.forEach(function(element){
 		crystal_model.super_cell.atoms.forEach(function(atom){
 			if (atom.element === element){

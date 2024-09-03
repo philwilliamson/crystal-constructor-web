@@ -8,7 +8,7 @@ import {
 } from './model-utils.js';
 
 export function createShader(gl, type, source) {
-	//create shader for webgl context
+	// create shader for webgl context
 	var shader = gl.createShader(type);
 	gl.shaderSource(shader, source);
 	gl.compileShader(shader);
@@ -22,7 +22,7 @@ export function createShader(gl, type, source) {
 };
 
 export function createProgram(gl, vertexShader, fragmentShader) {
-	//link vertex and fragment shader into program in webgl context
+	// link vertex and fragment shader into program in webgl context
 	var program = gl.createProgram();
 	gl.attachShader(program, vertexShader);
 	gl.attachShader(program, fragmentShader);
@@ -37,7 +37,7 @@ export function createProgram(gl, vertexShader, fragmentShader) {
 };
 
 export function initializeBuffers(gl, mesh_data){
-	//Initialize buffers based on mesh data and return object containing buffer handles
+	// initialize buffers based on mesh data and return object containing buffer handles
 	var meshes = {};
 	meshes.cell_mesh = {
 		type: 'crystal_cell',
@@ -46,7 +46,7 @@ export function initializeBuffers(gl, mesh_data){
 		index_buffer: gl.createBuffer()
 	};
 						
-	//send cell mesh object data to buffers 
+	// send cell mesh object data to buffers 
 	gl.bindBuffer(gl.ARRAY_BUFFER, meshes.cell_mesh.position_buffer);
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(mesh_data.cell_mesh.position_vertices), gl.STATIC_DRAW);
 	gl.bindBuffer(gl.ARRAY_BUFFER, meshes.cell_mesh.color_buffer);
@@ -61,7 +61,7 @@ export function initializeBuffers(gl, mesh_data){
 		index_count: mesh_data.atom_mesh.indices.length
 	};
 
-	//send atom mesh object data to buffers 
+	// send atom mesh object data to buffers 
 	gl.bindBuffer(gl.ARRAY_BUFFER, meshes.atom_mesh.position_buffer);
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(mesh_data.atom_mesh.position_vertices), gl.STATIC_DRAW);
 	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, meshes.atom_mesh.index_buffer);
@@ -71,7 +71,7 @@ export function initializeBuffers(gl, mesh_data){
 };
 
 export function updateBuffers(gl, mesh_data, mesh_buffers){
-	//send object data to buffers 
+	// send object data to buffers 
 	gl.bindBuffer(gl.ARRAY_BUFFER, mesh_buffers.cell_mesh.position_buffer);
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(mesh_data.cell_mesh.position_vertices), gl.STATIC_DRAW);
 	gl.bindBuffer(gl.ARRAY_BUFFER, mesh_buffers.cell_mesh.color_buffer);
@@ -81,10 +81,10 @@ export function updateBuffers(gl, mesh_data, mesh_buffers){
 };
 
 export function generateMeshData(crystal_model){
-	//Takes crystal model and returns objects containing mesh data
+	// takes crystal model and returns objects containing mesh data
 	var meshes = {};
 
-	//generate data for crystal cell mesh
+	// generate data for crystal cell mesh
 	var line_mesh_position_vertices = lineMeshPositionVertices(crystal_model);
 	var line_mesh_color_vertices = lineMeshColorVertices(crystal_model);
 	var line_mesh_indices = lineMeshIndices(crystal_model);
@@ -98,7 +98,7 @@ export function generateMeshData(crystal_model){
 
 	meshes.cell_mesh = cell_object;
 
-	//generate data for atoms
+	// generate data for atoms
 	var latitude_count = 10;
 	var longitude_count = 10;
 
@@ -117,7 +117,7 @@ export function generateMeshData(crystal_model){
 };
 
 export function generateSceneObjects(mesh_buffers, programs, program_locations, cell_transform_matrix, atom_lighting_matrix){
-	//Create objects with data to draw scene
+	// create objects with data to draw scene
 	var scene_objects = {};
 
 	scene_objects.cell_object = {
@@ -175,7 +175,7 @@ export function drawScene(gl, scene_objects, crystal_model) {
 
 	var size = 3;                   // 3 components per iteration
 	var type = gl.UNSIGNED_BYTE;	// the data is 8bit unsigned values
-	var normalize = false;          // normalize the data (convert from 0-255 to 0-1)
+	var normalize = false;          // don't normalize the data
 	var stride = 0;             	// 0 = move forward size * sizeof(type) each iteration to get the next position
 	var offset = 0;             	// start at the beginning of the buffer
 	gl.vertexAttribPointer(scene_objects.cell_object.a_color_location, size, type, normalize, stride, offset);
@@ -359,7 +359,7 @@ export function drawScene(gl, scene_objects, crystal_model) {
 };
 
 function lineMeshPositionVertices(crystal_model){
-	//takes crystal model data and generates line mesh position vertices
+	// takes crystal model data and generates line mesh position vertices
 	var vertices = [
 		// left column front
 		0,   0,   0,
@@ -376,7 +376,7 @@ function lineMeshPositionVertices(crystal_model){
 };
 
 function lineMeshColorVertices(){
-	//generates line mesh color vertices
+	// generates line mesh color vertices
 	var vertices = [
 		// left column front
 		0,  0, 0,
@@ -393,7 +393,7 @@ function lineMeshColorVertices(){
 };
 
 function lineMeshIndices(){
-	//generates line mesh indices
+	// generates line mesh indices
 	var indices = [
 		// left column front
 		0, 1,
@@ -414,19 +414,19 @@ function lineMeshIndices(){
 };
 
 function triangleMeshPositionVertices(latitude_count, longitude_count){
-	//generate position vertices for sphere using parametric surface and number of latitudes and longitudes
+	// generate position vertices for sphere using parametric surface and number of latitudes and longitudes
 	
 	var vertices = [0, 0, 1];
 
 	for (var lat_index = 1; lat_index < (latitude_count - 1); lat_index++){
-		//generating layers of vertices
+		// generating layers of vertices
 		for (var long_index = 0; long_index < longitude_count; long_index++){
-			//generating vertices in each layer
-			//set vertex points using spherical coordinates
+			// generating vertices in each layer
+			// set vertex points using spherical coordinates
 			var phi = degToRad(180.0 * lat_index / (latitude_count-1));
 			var theta = degToRad(360.0 * long_index / longitude_count);
 			
-			//append data array
+			// append data array
 			vertices.push(Math.sin(phi) * Math.cos(theta));
 			vertices.push(Math.sin(phi) * Math.sin(theta));
 			vertices.push(Math.cos(phi));
