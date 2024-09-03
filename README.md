@@ -58,7 +58,7 @@ Navigate to `localhost:4321` in your browser to see the running local site.
 │   │       ├── model-utils.js  // functions for updating crystal model
 │   │       └── webgl-utils.js  // functions for working with WebGL
 │   └── styles
-│       └── styles.css
+│       └── styles.css // styling for index page
 └── tsconfig.json
 ```
 
