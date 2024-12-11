@@ -1,4 +1,4 @@
-# Crystal Constructor
+# Crystal Constructor Web
 
 A browser-based application for constructing atomic crystal models.
 
